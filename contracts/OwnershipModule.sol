@@ -35,9 +35,9 @@ contract OwnershipModule is AvaraModule {
     event SellingNft(uint256 nftId, uint256 price, address seller);
     event BuyingNft(uint256 nftId, address buyer);
 
-    constructor(address cOwner, address baseContract, address avaraNftContract, address avaraContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
+    constructor(address cOwner, address baseContract, address avaraNftContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
         AvaraNFT = IERC721(avaraNftContract);
-        Avara = IERC20(avaraContract);
+        Avara = IERC20(baseContract);
     }
 
     function selling(uint256 nftId, uint256 price_) public {
