@@ -1,5 +1,6 @@
-const Migrations = artifacts.require("Migrations");
+const OwnershipModule = artifacts.require("OwnershipModule");
 
-module.exports = function (deployer) {
-  deployer.deploy(Migrations);
+module.exports = async function (deployer, network, accounts) {
+	let res;
+	deployer.deploy(OwnershipModule);
 };

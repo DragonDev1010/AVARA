@@ -33,6 +33,7 @@ contract OwnershipModule is AvaraModule {
     }
     mapping(uint256 => SellNft) sellNftList;
     event SellingNft(uint256 nftId, uint256 price, address seller);
+    event BuyingNft(uint256 nftId, address buyer);
 
     constructor(address cOwner, address baseContract, address avaraNftContract, address avaraContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
         AvaraNFT = IERC721(avaraNftContract);
@@ -49,7 +50,6 @@ contract OwnershipModule is AvaraModule {
 
         emit SellingNft(nftId, price_, _msgSender());
     }
-    event BuyingNft(uint256 nftId, address buyer);
     function buying(uint256 nftId) public {
         require(AvaraNFT.exists(nftId), "OwnershipModule.buying: NftId does not exist.");
         require(sellNftList[nftId].price != 0, "OwnershipModule.buying: Token is not in sale list.");
