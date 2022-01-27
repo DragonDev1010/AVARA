@@ -49,13 +49,19 @@ contract OwnershipModule is AvaraModule {
 
         emit SellingNft(nftId, price_, _msgSender());
     }
+    event BuyingNft(uint256 nftId, address buyer);
     function buying(uint256 nftId) public {
         require(AvaraNFT.exists(nftId), "OwnershipModule.buying: NftId does not exist.");
         require(sellNftList[nftId].price != 0, "OwnershipModule.buying: Token is not in sale list.");
         require(AvaraNFT.ownerOf(nftId) != _msgSender(), "OwnershipModule.buying: Owner of nft can not buy his own nft.");
         SellNft storage sell = sellNftList[nftId];
         require(Avara.allowance(_msgSender(), address(this)) >=  sell.price, "OwnershipModule.buying: ERC20 token allowance is less than selling price.");
-        Avara.transferFrom(msg.sender, sell.seller, sell.price);
+        Avara.transferFrom(_msgSender(), sell.seller, sell.price);
+
+        AvaraNFT.safeTransferFrom(AvaraNFT.ownerOf(nftId), _msgSender(), nftId);
+        sellNftList[nftId].price = 0;
+        sellNftList[nftId].seller = _msgSender();
+        emit BuyingNft(nftId, _msgSender());
     }
     /**
     * @dev Occasionally called (only) by the server to make sure that the connection with the module and main contract is granted.
