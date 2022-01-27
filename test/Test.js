@@ -12,4 +12,7 @@ contract('Marketplace Contract', (accounts) => {
         avaraNft = await AvaraNft.deployed()
         ownershipModule = await OwnershipModule.deployed()
     })
+    it('selling nft', async() => {
+        
+    })
 })
