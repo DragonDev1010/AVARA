@@ -21,11 +21,25 @@ pragma solidity 0.8.4;
 
 import "./abstract/AvaraModule.sol";
 import "./library/SafeMath.sol";
-
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract OwnershipModule is AvaraModule {
-    constructor(address cOwner, address baseContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {}
+    IERC721 public AvaraNFT;
+    IERC20 public Avara;
+    constructor(address cOwner, address baseContract, address avaraNftContract, address avaraContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
+        AvaraNFT = IERC721(avaraNftContract);
+        Avara = IERC20(avaraContract);
+    }
 
+    struct SellNft {
+        uint256 price;
+        address seller;
+    }
+    mapping(uint256 => SellNft) sellNftList;
+    function setSelling(uint256 nftId) public {
+
+    }
     /**
     * @dev Occasionally called (only) by the server to make sure that the connection with the module and main contract is granted.
     */
