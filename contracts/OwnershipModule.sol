@@ -22,6 +22,7 @@ pragma solidity 0.8.4;
 import "./abstract/AvaraModule.sol";
 import "./library/SafeMath.sol";
 
+
 contract OwnershipModule is AvaraModule {
     constructor(address cOwner, address baseContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {}
 
