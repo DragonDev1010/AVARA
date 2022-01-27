@@ -37,8 +37,13 @@ contract OwnershipModule is AvaraModule {
         address seller;
     }
     mapping(uint256 => SellNft) sellNftList;
-    function setSelling(uint256 nftId) public {
-
+    function setSelling(uint256 nftId, uint256 price_) public {
+        require(AvaraNFT.exists(nftId), "Marketplace.sellingNFT: TokenID does not exist");
+        require(AvaraNFT.ownerOf(nftId) == _msgSender(), "Marketplace.sellingNFT: Sender has to be the owner of token");
+        sellNftList[nftId] = SellNft({
+            price: price_,
+            seller: _msgSender()
+        });
     }
     /**
     * @dev Occasionally called (only) by the server to make sure that the connection with the module and main contract is granted.
