@@ -4,9 +4,10 @@ require('chai')
 
 const {assert} = require('chai')
 
-const ownershipModule = artifacts.require('./OwnershipModule.sol')
-const avara = artifacts.require('./Avara.sol')
+const AvaraNft = artifacts.require("AvaraNft");
 
 contract('Marketplace Contract', (accounts) => {
-
+    before(async() => {
+        avaraNft = await AvaraNft.deployed()
+    })
 })

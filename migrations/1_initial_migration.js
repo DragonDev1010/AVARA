@@ -1,6 +1,5 @@
-const OwnershipModule = artifacts.require("OwnershipModule");
-
+const AvaraNft = artifacts.require("AvaraNft");
 module.exports = async function (deployer, network, accounts) {
 	let res;
-	deployer.deploy(OwnershipModule);
+	await deployer.deploy(AvaraNft, "AVARANFT", "ANFT");
 };
