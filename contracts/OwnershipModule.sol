@@ -31,7 +31,7 @@ contract OwnershipModule is AvaraModule {
         uint256 price;
         address seller;
     }
-    mapping(uint256 => SellNft) sellNftList;
+    mapping(uint256 => SellNft) public sellNftList;
     event SellingNft(uint256 nftId, uint256 price, address seller);
     event BuyingNft(uint256 nftId, address buyer);
 
