@@ -27,23 +27,35 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract OwnershipModule is AvaraModule {
     IERC721 public AvaraNFT;
     IERC20 public Avara;
-    constructor(address cOwner, address baseContract, address avaraNftContract, address avaraContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
-        AvaraNFT = IERC721(avaraNftContract);
-        Avara = IERC20(avaraContract);
-    }
-
     struct SellNft {
         uint256 price;
         address seller;
     }
     mapping(uint256 => SellNft) sellNftList;
-    function setSelling(uint256 nftId, uint256 price_) public {
-        require(AvaraNFT.exists(nftId), "Marketplace.sellingNFT: TokenID does not exist");
+    event SellingNft(uint256 nftId, uint256 price, address seller);
+
+    constructor(address cOwner, address baseContract, address avaraNftContract, address avaraContract) AvaraModule(cOwner, baseContract, "Ownership", "0.0.1") {
+        AvaraNFT = IERC721(avaraNftContract);
+        Avara = IERC20(avaraContract);
+    }
+
+    function selling(uint256 nftId, uint256 price_) public {
+        require(AvaraNFT.exists(nftId), "Marketplace.sellingNFT: NftId does not exist");
         require(AvaraNFT.ownerOf(nftId) == _msgSender(), "Marketplace.sellingNFT: Sender has to be the owner of token");
         sellNftList[nftId] = SellNft({
             price: price_,
             seller: _msgSender()
         });
+
+        emit SellingNft(nftId, price_, _msgSender());
+    }
+    function buying(uint256 nftId) public {
+        require(AvaraNFT.exists(nftId), "OwnershipModule.buying: NftId does not exist.");
+        require(sellNftList[nftId].price != 0, "OwnershipModule.buying: Token is not in sale list.");
+        require(AvaraNFT.ownerOf(nftId) != _msgSender(), "OwnershipModule.buying: Owner of nft can not buy his own nft.");
+        SellNft storage sell = sellNftList[nftId];
+        require(Avara.allowance(_msgSender(), address(this)) >=  sell.price, "OwnershipModule.buying: ERC20 token allowance is less than selling price.");
+        Avara.transferFrom(msg.sender, sell.seller, sell.price);
     }
     /**
     * @dev Occasionally called (only) by the server to make sure that the connection with the module and main contract is granted.
